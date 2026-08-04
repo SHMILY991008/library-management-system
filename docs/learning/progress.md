@@ -18,4 +18,5 @@
 - `mvn test`：通过
 - 应用上下文测试：通过
 - `GET /api/health` MVC 测试：通过
+- `GET /api/health` 本地真实 HTTP：通过
 - 阶段结论：阶段 0 完成，可以进入图书 CRUD。
