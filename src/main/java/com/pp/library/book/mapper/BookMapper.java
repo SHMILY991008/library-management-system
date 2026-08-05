@@ -26,4 +26,6 @@ public interface BookMapper {
         @Param("offset") int offset,
         @Param("limit") int limit
     );
+
+    
 }

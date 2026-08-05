@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
+
 @ExtendWith(MockitoExtension.class)
 class BookServiceTest {
 
@@ -154,5 +156,26 @@ class BookServiceTest {
         assertEquals(100, response.getTotalStock());
         assertEquals(50, response.getAvailableStock());
         
+    }
+
+    @Test
+    void shouldReturnPagedBooks() {
+        BookEntity book = new BookEntity();
+        book.setId(1L);
+        book.setIsbn("PAGE-001");
+        book.setTitle("Java编程");
+        book.setAuthor("张三");
+        book.setTotalStock(10);
+        book.setAvailableStock(8);
+
+        when(bookMapper.findPage("Java", 2, 2))
+                .thenReturn(List.of(book));
+
+        List<BookResponse> responses =
+                bookService.findPage("Java", 2, 2);
+
+        assertEquals(1, responses.size());
+        assertEquals("PAGE-001", responses.get(0).getIsbn());
+        assertEquals("Java编程", responses.get(0).getTitle());
     }
 }

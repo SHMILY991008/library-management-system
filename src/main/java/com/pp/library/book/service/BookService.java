@@ -7,6 +7,8 @@ import com.pp.library.book.mapper.BookMapper;
 import com.pp.library.book.vo.BookResponse;
 import com.pp.library.book.dto.UpdateBookRequest;
 
+import java.util.List;
+
 // import org.springframework.beans.factory.annotation.Autowired;
 // import com.pp.library.book.exception.BookNotFoundException;
 import org.springframework.stereotype.Service;
@@ -121,5 +123,29 @@ public class BookService {
         response.setAvailableStock(existingBook.getAvailableStock());
 
         return response;
+    }
+
+    public List<BookResponse> findPage(
+            String title,
+            int page,
+            int size) {
+
+        int offset = (page - 1) * size;
+
+        List<BookEntity> bookEntities =
+                bookMapper.findPage(title, offset, size);
+
+        // Entity 转 Response
+        return bookEntities.stream().map(bookEntity -> {
+            BookResponse response = new BookResponse();
+            response.setId(bookEntity.getId());
+            response.setIsbn(bookEntity.getIsbn());
+            response.setTitle(bookEntity.getTitle());
+            response.setAuthor(bookEntity.getAuthor());
+            response.setPublisher(bookEntity.getPublisher());
+            response.setTotalStock(bookEntity.getTotalStock());
+            response.setAvailableStock(bookEntity.getAvailableStock());
+            return response;
+        }).toList();
     }
 }

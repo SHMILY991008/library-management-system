@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -56,5 +59,17 @@ public class BookController {
             @RequestBody UpdateBookRequest request) {
         BookResponse response = bookService.update(id, request);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<BookResponse>> findPage(
+            @RequestParam(required = false) String title,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        List<BookResponse> responses =
+                bookService.findPage(title, page, size);
+
+        return ResponseEntity.ok(responses);
     }
 }

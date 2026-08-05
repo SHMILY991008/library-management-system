@@ -1,5 +1,7 @@
 package com.pp.library.book.controller;
 
+import java.util.List;
+
 import tools.jackson.databind.ObjectMapper;
 import com.pp.library.book.dto.CreateBookRequest;
 import com.pp.library.book.service.BookService;
@@ -142,5 +144,28 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.author").value("李四"))
                 .andExpect(jsonPath("$.totalStock").value(20))
                 .andExpect(jsonPath("$.availableStock").value(18));
+    }
+
+    @Test
+    void shouldFindPagedBooks() throws Exception {
+        BookResponse response = new BookResponse();
+        response.setId(1L);
+        response.setIsbn("PAGE-001");
+        response.setTitle("Java编程");
+        response.setAuthor("张三");
+        response.setTotalStock(10);
+        response.setAvailableStock(8);
+
+        when(bookService.findPage("Java", 1, 10))
+                .thenReturn(List.of(response));
+
+        mockMvc.perform(get("/api/books")
+                        .param("title", "Java")
+                        .param("page", "1")
+                        .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].isbn").value("PAGE-001"))
+                .andExpect(jsonPath("$[0].title").value("Java编程"));
     }
 }
