@@ -20,3 +20,9 @@
 - `GET /api/health` MVC 测试：通过
 - `GET /api/health` 本地真实 HTTP：通过
 - 阶段结论：阶段 0 完成，可以进入图书 CRUD。
+
+## 阶段 1
+
+- 已完成：MySQL `book` 表、MyBatis Entity/Mapper、Service、图书新增/查询/修改/逻辑删除/分页搜索接口及自动化测试。
+- 暂缓：Postman 完整 CRUD 手动验证。此前新增接口出现过 HTTP 500，但尚未读取应用端完整堆栈定位；暂不把手动验证标记为通过。
+- 下一步：阶段 2 统一参数校验、业务异常和错误响应。
