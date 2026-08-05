@@ -13,7 +13,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -70,5 +76,36 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.title").value("Java编程"))
                 .andExpect(jsonPath("$.totalStock").value(10))
                 .andExpect(jsonPath("$.availableStock").value(10));
+    }
+
+    @Test
+    void shouldGetBookById() throws Exception {
+        BookResponse response = new BookResponse();
+        response.setId(1L);
+        response.setIsbn("TEST-001");
+        response.setTitle("Java编程");
+        response.setAuthor("张三");
+        response.setTotalStock(10);
+        response.setAvailableStock(8);
+
+        when(bookService.findById(1L))
+                .thenReturn(response);
+
+        mockMvc.perform(get("/api/books/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.isbn").value("TEST-001"))
+                .andExpect(jsonPath("$.title").value("Java编程"))
+                .andExpect(jsonPath("$.availableStock").value(8));
+    }
+
+    @Test
+    void shouldDeleteBook() throws Exception {
+        doNothing().when(bookService).delete(1L);
+
+        mockMvc.perform(delete("/api/books/1"))
+                .andExpect(status().isNoContent());
+
+        verify(bookService).delete(1L);
     }
 }
