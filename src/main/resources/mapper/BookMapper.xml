@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pp.library.book.mapper.BookMapper">
+
+    <resultMap id="BookResultMap"
+               type="com.pp.library.book.entity.BookEntity">
+        <id property="id" column="id"/>
+        <result property="isbn" column="isbn"/>
+        <result property="title" column="title"/>
+        <result property="author" column="author"/>
+        <result property="publisher" column="publisher"/>
+        <result property="totalStock" column="total_stock"/>
+        <result property="availableStock" column="available_stock"/>
+        <result property="deleted" column="deleted"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert"
+            parameterType="com.pp.library.book.entity.BookEntity"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO book (
+            isbn,
+            title,
+            author,
+            publisher,
+            total_stock,
+            available_stock,
+            deleted,
+            created_at,
+            updated_at
+        )
+        VALUES (
+            #{isbn},
+            #{title},
+            #{author},
+            #{publisher},
+            #{totalStock},
+            #{availableStock},
+            0,
+            NOW(),
+            NOW()
+        )
+    </insert>
+
+    <select id="findById"
+            parameterType="long"
+            resultMap="BookResultMap">
+        SELECT
+            id, isbn, title, author, publisher,
+            total_stock, available_stock, deleted,
+            created_at, updated_at
+        FROM book
+        WHERE id = #{id}
+          AND deleted = 0
+    </select>
+
+    <select id="findByIsbn"
+            parameterType="string"
+            resultMap="BookResultMap">
+        SELECT
+            id, isbn, title, author, publisher,
+            total_stock, available_stock, deleted,
+            created_at, updated_at
+        FROM book
+        WHERE isbn = #{isbn}
+          AND deleted = 0
+    </select>
+
+    <update id="logicalDelete" parameterType="long">
+        UPDATE book
+        SET deleted = 1,
+            updated_at = NOW()
+        WHERE id = #{id}
+          AND deleted = 0
+    </update>
+
+</mapper>
