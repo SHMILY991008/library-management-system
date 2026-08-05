@@ -1,7 +1,12 @@
 package com.pp.library.book.mapper;
 
 import com.pp.library.book.entity.BookEntity;
+
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 
 @Mapper
 public interface BookMapper {
@@ -13,4 +18,12 @@ public interface BookMapper {
     BookEntity findByIsbn(String isbn);
 
     int logicalDelete(Long id);
+
+    int update(BookEntity book);
+
+    List<BookEntity> findPage(
+        @Param("title") String title,
+        @Param("offset") int offset,
+        @Param("limit") int limit
+    );
 }

@@ -1,6 +1,7 @@
 package com.pp.library.book.controller;
 
 import com.pp.library.book.dto.CreateBookRequest;
+import com.pp.library.book.dto.UpdateBookRequest;
 import com.pp.library.book.service.BookService;
 import com.pp.library.book.vo.BookResponse;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/api/books")
@@ -45,5 +48,13 @@ public class BookController {
             @PathVariable Long id) {
         bookService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BookResponse> update(
+            @PathVariable Long id,
+            @RequestBody UpdateBookRequest request) {
+        BookResponse response = bookService.update(id, request);
+        return ResponseEntity.ok(response);
     }
 }

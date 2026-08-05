@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import com.pp.library.book.dto.UpdateBookRequest;
 
 import com.pp.library.book.dto.CreateBookRequest;
 import com.pp.library.book.entity.BookEntity;
@@ -118,5 +119,40 @@ class BookServiceTest {
         verify(bookMapper).logicalDelete(1L);
     }
 
+    // 给定 ID 存在的图书
+    // 调用 update(id, request)
+    // Mapper 更新成功
+    // 返回更新后的 BookResponse
+    void shouldUpdateBookWhenExists() {
+        BookEntity existingBook = new BookEntity();
+        existingBook.setId(3L);
+        existingBook.setIsbn("SBS-001");
+        existingBook.setTitle("ONE PIECE");
+        existingBook.setAuthor("Eiichiro Oda");
+        existingBook.setPublisher("Shueisha");
+        existingBook.setTotalStock(98);
+        existingBook.setAvailableStock(33);
 
+        UpdateBookRequest request = new UpdateBookRequest();
+        request.setTitle("ONE PIECE - Updated");
+        request.setAuthor("Eiichiro Oda (Updated)");
+        request.setPublisher("Shueisha (Updated)");
+        request.setTotalStock(100);
+        request.setAvailableStock(50);
+
+        when(bookMapper.findById(1L))
+                .thenReturn(existingBook);
+
+        when(bookMapper.update(any(BookEntity.class)))
+                .thenReturn(1);
+
+        BookResponse response = bookService.update(1L, request);
+
+        assertEquals("ONE PIECE - Updated", response.getTitle());
+        assertEquals("Eiichiro Oda (Updated)", response.getAuthor());
+        assertEquals("Shueisha (Updated)", response.getPublisher());
+        assertEquals(100, response.getTotalStock());
+        assertEquals(50, response.getAvailableStock());
+        
+    }
 }

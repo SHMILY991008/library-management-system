@@ -5,6 +5,7 @@ import com.pp.library.book.entity.BookEntity;
 import com.pp.library.book.exception.BookNotFoundException;
 import com.pp.library.book.mapper.BookMapper;
 import com.pp.library.book.vo.BookResponse;
+import com.pp.library.book.dto.UpdateBookRequest;
 
 // import org.springframework.beans.factory.annotation.Autowired;
 // import com.pp.library.book.exception.BookNotFoundException;
@@ -88,5 +89,37 @@ public class BookService {
         if (rowsAffected != 1) {
             throw new BookNotFoundException(id);
         }
+    }
+
+    public BookResponse update(Long id, UpdateBookRequest request) {
+        BookEntity existingBook = bookMapper.findById(id);
+        if (existingBook == null) {
+            throw new BookNotFoundException(id);
+        }
+
+        // Update the book entity with the new values
+        existingBook.setTitle(request.getTitle());
+        existingBook.setAuthor(request.getAuthor());
+        existingBook.setPublisher(request.getPublisher());
+        existingBook.setTotalStock(request.getTotalStock());
+        existingBook.setAvailableStock(request.getAvailableStock());
+
+        // Call the mapper to update the book in the database
+        int rowsAffected = bookMapper.update(existingBook);
+        if (rowsAffected != 1) {
+            throw new RuntimeException("Failed to update the book in the database.");
+        }
+
+        // Return the updated book response
+        BookResponse response = new BookResponse();
+        response.setId(existingBook.getId());
+        response.setIsbn(existingBook.getIsbn());
+        response.setTitle(existingBook.getTitle());
+        response.setAuthor(existingBook.getAuthor());
+        response.setPublisher(existingBook.getPublisher());
+        response.setTotalStock(existingBook.getTotalStock());
+        response.setAvailableStock(existingBook.getAvailableStock());
+
+        return response;
     }
 }

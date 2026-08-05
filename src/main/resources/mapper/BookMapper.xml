@@ -79,4 +79,34 @@
           AND deleted = 0
     </update>
 
+    <update id="update"
+        parameterType="com.pp.library.book.entity.BookEntity">
+    UPDATE book
+    SET isbn = #{isbn},
+        title = #{title},
+        author = #{author},
+        publisher = #{publisher},
+        total_stock = #{totalStock},
+        available_stock = #{availableStock},
+        updated_at = NOW()
+    WHERE id = #{id}
+      AND deleted = 0
+    </update>
+
+    <select id="findPage"
+            resultMap="BookResultMap">
+        SELECT
+            id, isbn, title, author, publisher,
+            total_stock, available_stock, deleted,
+            created_at, updated_at
+        FROM book
+        WHERE deleted = 0
+        AND (
+            #{title} IS NULL
+            OR title LIKE CONCAT('%', #{title}, '%')
+        )
+        ORDER BY id DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
 </mapper>

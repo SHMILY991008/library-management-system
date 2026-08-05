@@ -12,7 +12,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import com.pp.library.book.dto.UpdateBookRequest;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
@@ -99,6 +101,7 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.availableStock").value(8));
     }
 
+    
     @Test
     void shouldDeleteBook() throws Exception {
         doNothing().when(bookService).delete(1L);
@@ -107,5 +110,37 @@ class BookControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(bookService).delete(1L);
+    }
+
+    @Test
+    void shouldUpdateBook() throws Exception {
+        BookResponse response = new BookResponse();
+        response.setId(1L);
+        response.setIsbn("TEST-001");
+        response.setTitle("更新后的Java编程");
+        response.setAuthor("李四");
+        response.setTotalStock(20);
+        response.setAvailableStock(18);
+
+        when(bookService.update(
+                any(Long.class),
+                any(UpdateBookRequest.class)))
+                .thenReturn(response);
+
+        UpdateBookRequest request = new UpdateBookRequest();
+        request.setTitle("更新后的Java编程");
+        request.setAuthor("李四");
+        request.setTotalStock(20);
+        request.setAvailableStock(18);
+
+        mockMvc.perform(put("/api/books/1")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.title").value("更新后的Java编程"))
+                .andExpect(jsonPath("$.author").value("李四"))
+                .andExpect(jsonPath("$.totalStock").value(20))
+                .andExpect(jsonPath("$.availableStock").value(18));
     }
 }
