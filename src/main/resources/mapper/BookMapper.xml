@@ -93,6 +93,16 @@
       AND deleted = 0
     </update>
 
+    <update id="decreaseAvailableStock" parameterType="long">
+        UPDATE book
+        SET
+            available_stock = available_stock - 1,
+            updated_at = NOW()
+        WHERE id = #{bookId}
+        AND deleted = 0
+        AND available_stock > 0
+    </update>
+
     <select id="findPage"
             resultMap="BookResultMap">
         SELECT

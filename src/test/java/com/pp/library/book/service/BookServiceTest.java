@@ -12,6 +12,8 @@ import com.pp.library.book.dto.CreateBookRequest;
 import com.pp.library.book.entity.BookEntity;
 import com.pp.library.book.exception.BookNotFoundException;
 import com.pp.library.book.vo.BookResponse;
+import com.pp.library.book.exception.DuplicateIsbnException;
+import com.pp.library.book.exception.InvalidStockException;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.doNothing;
@@ -73,7 +75,7 @@ class BookServiceTest {
         request.setAvailableStock(6);
 
         assertThrows(
-                IllegalArgumentException.class,
+                InvalidStockException.class,
                 () -> bookService.create(request)
         );
     }
@@ -96,7 +98,7 @@ class BookServiceTest {
                 .thenReturn(existingBook);
 
         assertThrows(
-                IllegalArgumentException.class,
+                DuplicateIsbnException.class,
                 () -> bookService.create(request)
         );
         verify(bookMapper, never()).insert(any(BookEntity.class));
@@ -125,6 +127,7 @@ class BookServiceTest {
     // 调用 update(id, request)
     // Mapper 更新成功
     // 返回更新后的 BookResponse
+    @Test
     void shouldUpdateBookWhenExists() {
         BookEntity existingBook = new BookEntity();
         existingBook.setId(3L);
@@ -177,5 +180,30 @@ class BookServiceTest {
         assertEquals(1, responses.size());
         assertEquals("PAGE-001", responses.get(0).getIsbn());
         assertEquals("Java编程", responses.get(0).getTitle());
+    }
+
+    @Test
+    void shouldRejectUpdateWhenAvailableStockGreaterThanTotalStock() {
+        BookEntity existingBook = new BookEntity();
+        existingBook.setId(1L);
+        existingBook.setIsbn("BOOK-001");
+
+        UpdateBookRequest request = new UpdateBookRequest();
+        request.setIsbn("BOOK-001");
+        request.setTitle("Java");
+        request.setAuthor("Author");
+        request.setPublisher("Publisher");
+        request.setTotalStock(5);
+        request.setAvailableStock(6);
+
+        when(bookMapper.findById(1L))
+                .thenReturn(existingBook);
+
+        assertThrows(
+                InvalidStockException.class,
+                () -> bookService.update(1L, request)
+        );
+
+        verify(bookMapper, never()).update(any(BookEntity.class));
     }
 }

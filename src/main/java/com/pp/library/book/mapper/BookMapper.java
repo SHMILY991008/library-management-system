@@ -21,11 +21,12 @@ public interface BookMapper {
 
     int update(BookEntity book);
 
+    int decreaseAvailableStock(Long bookId);
+
     List<BookEntity> findPage(
         @Param("title") String title,
         @Param("offset") int offset,
         @Param("limit") int limit
     );
-
     
 }

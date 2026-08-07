@@ -1,5 +1,8 @@
 package com.pp.library.book.controller;
 
+import java.util.List;
+import jakarta.validation.Valid;
+
 import com.pp.library.book.dto.CreateBookRequest;
 import com.pp.library.book.dto.UpdateBookRequest;
 import com.pp.library.book.service.BookService;
@@ -15,9 +18,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -32,7 +35,7 @@ public class BookController {
 
     @PostMapping
     public ResponseEntity<BookResponse> create(
-            @RequestBody CreateBookRequest request) {
+            @Valid @RequestBody CreateBookRequest request) {
         BookResponse response = bookService.create(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -56,7 +59,7 @@ public class BookController {
     @PutMapping("/{id}")
     public ResponseEntity<BookResponse> update(
             @PathVariable Long id,
-            @RequestBody UpdateBookRequest request) {
+            @Valid @RequestBody UpdateBookRequest request) {
         BookResponse response = bookService.update(id, request);
         return ResponseEntity.ok(response);
     }

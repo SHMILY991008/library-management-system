@@ -3,6 +3,8 @@ package com.pp.library.book.service;
 import com.pp.library.book.dto.CreateBookRequest;
 import com.pp.library.book.entity.BookEntity;
 import com.pp.library.book.exception.BookNotFoundException;
+import com.pp.library.book.exception.DuplicateIsbnException;
+import com.pp.library.book.exception.InvalidStockException;
 import com.pp.library.book.mapper.BookMapper;
 import com.pp.library.book.vo.BookResponse;
 import com.pp.library.book.dto.UpdateBookRequest;
@@ -35,12 +37,12 @@ public class BookService {
                 || request.getTotalStock() < 0
                 || request.getAvailableStock() < 0
                 || request.getAvailableStock() > request.getTotalStock()) {
-            throw new IllegalArgumentException("库存数量不合法");
+            throw new InvalidStockException();
         }
         BookEntity existingBook = bookMapper.findByIsbn(request.getIsbn());  
         
         if (existingBook != null) {
-                throw new IllegalArgumentException("Book with ISBN " + request.getIsbn() + " already exists.");
+                throw new DuplicateIsbnException(request.getIsbn());
             }
 
             BookEntity bookEntity = new BookEntity();
@@ -99,6 +101,14 @@ public class BookService {
             throw new BookNotFoundException(id);
         }
 
+        if (request.getTotalStock() == null
+                || request.getAvailableStock() == null
+                || request.getTotalStock() < 0
+                || request.getAvailableStock() < 0
+                || request.getAvailableStock() > request.getTotalStock()) {
+            throw new InvalidStockException();
+        }
+        
         // Update the book entity with the new values
         existingBook.setTitle(request.getTitle());
         existingBook.setAuthor(request.getAuthor());

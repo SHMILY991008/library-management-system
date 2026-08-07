@@ -106,7 +106,36 @@ class BookMapperIntegrationTest {
         // findPage(null, 0, 10)
         // → 不再包含已删除图书
         bookMapper.logicalDelete(book2.getId());
-        int remainingBooksCount = bookMapper.findPage(null, 0, 10).size();
-        assertEquals(2, remainingBooksCount);
+        int deletedBookCount =
+                bookMapper.findPage("Spring Boot", 0, 10).size();
+        assertEquals(0, deletedBookCount);
+    }
+
+    @Test
+    void shouldDecreaseStockOnlyOnceWhenOnlyOneAvailable() {
+        BookEntity book = new BookEntity();
+        book.setIsbn("ATOMIC-001");
+        book.setTitle("Atomic Stock Test");
+        book.setAuthor("PP");
+        book.setPublisher("Learning Press");
+        book.setTotalStock(1);
+        book.setAvailableStock(1);
+
+        assertEquals(1, bookMapper.insert(book));
+        assertNotNull(book.getId());
+
+        int firstResult =
+                bookMapper.decreaseAvailableStock(book.getId());
+
+        int secondResult =
+                bookMapper.decreaseAvailableStock(book.getId());
+
+        assertEquals(1, firstResult);
+        assertEquals(0, secondResult);
+
+        BookEntity savedBook = bookMapper.findById(book.getId());
+
+        assertNotNull(savedBook);
+        assertEquals(0, savedBook.getAvailableStock());
     }
 }
