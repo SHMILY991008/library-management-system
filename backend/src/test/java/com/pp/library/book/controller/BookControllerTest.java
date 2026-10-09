@@ -2,7 +2,7 @@ package com.pp.library.book.controller;
 
 import java.util.List;
 
-import tools.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pp.library.book.dto.CreateBookRequest;
 import com.pp.library.book.service.BookService;
 import com.pp.library.book.vo.BookResponse;
@@ -167,7 +167,7 @@ class BookControllerTest {
         response.setAvailableStock(8);
 
         when(bookService.findPage("Java", 1, 10))
-                .thenReturn(List.of(response));
+                .thenReturn(java.util.Collections.singletonList(response));
 
         mockMvc.perform(get("/api/books")
                         .param("title", "Java")

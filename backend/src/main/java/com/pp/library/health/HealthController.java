@@ -1,5 +1,6 @@
 package com.pp.library.health;
 
+import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,6 @@ public class HealthController {
 
     @GetMapping
     public Map<String, String> health() {
-        return Map.of("status", "UP");
+        return Collections.singletonMap("status", "UP");
     }
 }

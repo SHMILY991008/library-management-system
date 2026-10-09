@@ -4,7 +4,7 @@
 
 ## 1. 检查环境
 
-需要 Ubuntu WSL2、Java 21、Node.js 20.19+ 或 22.12+、MySQL 8、Nginx。系统需启用 systemd：运行 `systemctl status` 确认。如果不可用，在 `/etc/wsl.conf` 中加入：
+本项目已适配云电脑环境：Ubuntu WSL2、Java 17、Node.js 16.20.2、MySQL 5.7 和 Nginx 1.14。后端使用项目自带的 Maven Wrapper，以避免受系统 Maven 3.6.0 版本限制。系统需启用 systemd：运行 `systemctl status` 确认。如果不可用，在 `/etc/wsl.conf` 中加入：
 
 ```ini
 [boot]
@@ -45,7 +45,7 @@ sudo nano /etc/library-management/api.env
 
 ## 3. 安装应用
 
-确认 Java、Node.js、MySQL、Nginx 已安装并运行。检查 `/etc/nginx/sites-enabled/default`：如果它仍占用 80 端口，先确认没有其他网站依赖，再手动禁用。部署脚本会在默认站点仍启用时停止，避免覆盖已有网站。
+确认 Java 17、Node.js 16.20.2、MySQL 5.7、Nginx 已安装并运行。首次执行 Maven Wrapper 时，它会下载项目指定的 Maven 版本。检查 `/etc/nginx/sites-enabled/default`：如果它仍占用 80 端口，先确认没有其他网站依赖，再手动禁用。部署脚本会在默认站点仍启用时停止，避免覆盖已有网站。
 
 ```bash
 bash deploy/scripts/deploy.sh

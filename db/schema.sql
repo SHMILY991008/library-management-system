@@ -1,6 +1,9 @@
 CREATE DATABASE IF NOT EXISTS library_manager
     CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+ALTER DATABASE library_manager
+    CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 USE library_manager;
 
 CREATE TABLE IF NOT EXISTS book (
@@ -14,11 +17,7 @@ CREATE TABLE IF NOT EXISTS book (
     deleted BOOLEAN NOT NULL DEFAULT FALSE,
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL,
-    INDEX idx_book_title_deleted (title, deleted),
-    CONSTRAINT chk_book_total_stock CHECK (total_stock >= 0),
-    CONSTRAINT chk_book_available_stock CHECK (
-        available_stock >= 0 AND available_stock <= total_stock
-    )
+    INDEX idx_book_title_deleted (title, deleted)
 );
 
 CREATE TABLE IF NOT EXISTS reader (
@@ -42,6 +41,5 @@ CREATE TABLE IF NOT EXISTS borrow_record (
     INDEX idx_borrow_reader (reader_id),
     INDEX idx_borrow_book (book_id),
     CONSTRAINT fk_borrow_book FOREIGN KEY (book_id) REFERENCES book(id),
-    CONSTRAINT fk_borrow_reader FOREIGN KEY (reader_id) REFERENCES reader(id),
-    CONSTRAINT chk_borrow_status CHECK (status IN ('BORROWED', 'RETURNED'))
+    CONSTRAINT fk_borrow_reader FOREIGN KEY (reader_id) REFERENCES reader(id)
 );

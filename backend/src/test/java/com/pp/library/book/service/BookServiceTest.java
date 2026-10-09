@@ -172,7 +172,7 @@ class BookServiceTest {
         book.setAvailableStock(8);
 
         when(bookMapper.findPage("Java", 2, 2))
-                .thenReturn(List.of(book));
+                .thenReturn(java.util.Collections.singletonList(book));
 
         List<BookResponse> responses =
                 bookService.findPage("Java", 2, 2);

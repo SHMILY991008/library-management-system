@@ -5,7 +5,7 @@ import com.pp.library.borrow.dto.BorrowBookRequest;
 import com.pp.library.borrow.exception.BookOutOfStockException;
 import com.pp.library.borrow.service.BorrowService;
 import com.pp.library.borrow.vo.BorrowRecordResponse;
-import tools.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -101,7 +101,7 @@ class BorrowControllerTest {
         response.setStatus("BORROWED");
 
         when(borrowService.findByReaderId(10L))
-                .thenReturn(List.of(response));
+                .thenReturn(java.util.Collections.singletonList(response));
 
         mockMvc.perform(get("/api/readers/10/borrow-records"))
                 .andExpect(status().isOk())
@@ -117,7 +117,7 @@ class BorrowControllerTest {
         response.setBookId(1L);
         response.setReaderId(10L);
         response.setStatus("BORROWED");
-        when(borrowService.findAll()).thenReturn(List.of(response));
+        when(borrowService.findAll()).thenReturn(java.util.Collections.singletonList(response));
 
         mockMvc.perform(get("/api/borrow-records"))
                 .andExpect(status().isOk())

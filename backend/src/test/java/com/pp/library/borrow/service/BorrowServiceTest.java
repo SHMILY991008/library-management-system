@@ -173,7 +173,7 @@ class BorrowServiceTest {
 
         when(readerMapper.selectById(10L)).thenReturn(reader);
         when(borrowRecordMapper.selectByReaderId(10L))
-                .thenReturn(List.of(record));
+                .thenReturn(java.util.Collections.singletonList(record));
 
         List<BorrowRecordResponse> responses =
                 borrowService.findByReaderId(10L);

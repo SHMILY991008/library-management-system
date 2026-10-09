@@ -4,6 +4,7 @@ target/
 .vscode/
 *.log
 .env
+.env.local
 application-local.yml
 .learnings/
 .m2/

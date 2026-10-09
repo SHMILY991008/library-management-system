@@ -5,7 +5,7 @@ import com.pp.library.reader.dto.CreateReaderRequest;
 import com.pp.library.reader.exception.ReaderNotFoundException;
 import com.pp.library.reader.service.ReaderService;
 import com.pp.library.reader.vo.ReaderResponse;
-import tools.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -95,7 +95,7 @@ class ReaderControllerTest {
         response.setId(1L);
         response.setReaderNo("R-001");
         response.setName("张三");
-        when(readerService.findAll()).thenReturn(List.of(response));
+        when(readerService.findAll()).thenReturn(java.util.Collections.singletonList(response));
 
         mockMvc.perform(get("/api/readers"))
                 .andExpect(status().isOk())
