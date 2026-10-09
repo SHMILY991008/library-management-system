@@ -14,7 +14,7 @@ docs/       API 与部署说明
 
 ## 本地运行
 
-云电脑环境使用 Java 17、Node.js 16.20.2、MySQL 5.7 和 Nginx 1.14。本机可以用 Docker 模拟这套环境；若直接运行，则安装相同版本。后端使用项目自带的 Maven Wrapper，因此不依赖系统 Maven 版本。先用 MySQL 客户端执行 `db/schema.sql`，该脚本创建 `library_manager` 数据库与三张表。设置环境变量 `LIBRARY_DB_USERNAME`、`LIBRARY_DB_PASSWORD`，必要时设置 `LIBRARY_DB_URL`。不要把密码提交到 Git。
+本机和云电脑统一使用 Java 17、Node.js 16.20.2、MySQL 5.7；云电脑额外使用 Nginx 1.14。后端使用项目自带的 Maven Wrapper，因此不依赖系统 Maven 版本。先用 MySQL 客户端执行 `db/schema.sql`，该脚本创建 `library_manager` 数据库与三张表。设置环境变量 `LIBRARY_DB_USERNAME`、`LIBRARY_DB_PASSWORD`，必要时设置 `LIBRARY_DB_URL`。不要把密码提交到 Git。
 
 启动后端：
 
@@ -44,7 +44,6 @@ npm run dev
 ## 部署与接口
 
 - [WSL Ubuntu 部署步骤](docs/deployment.md)
-- [Docker 本机联调步骤](docs/docker.md)
 - [后端 API](docs/API.md)
 
 生产环境由 Nginx 提供 React 静态文件，并将 `/api` 转发到 Spring Boot。云电脑的公网地址、Windows 防火墙和 WSL 网络模式要根据实际环境配置。
