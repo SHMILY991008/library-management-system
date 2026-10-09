@@ -14,7 +14,7 @@ docs/       API 与部署说明
 
 ## 本地运行
 
-本机和云电脑统一使用 Java 17、Node.js 16.20.2、MySQL 5.7；云电脑额外使用 Nginx 1.14。后端使用项目自带的 Maven Wrapper，因此不依赖系统 Maven 版本。先用 MySQL 客户端执行 `db/schema.sql`，该脚本创建 `library_manager` 数据库与三张表。设置环境变量 `LIBRARY_DB_USERNAME`、`LIBRARY_DB_PASSWORD`，必要时设置 `LIBRARY_DB_URL`。不要把密码提交到 Git。
+本机使用 Java 17、Node.js 16.20.2 和现有的 MySQL 8；云电脑使用 Java 17、Node.js 16.20.2、MySQL 5.7 和 Nginx 1.14。建表脚本和数据库访问代码兼容 MySQL 5.7、8.0。后端使用项目自带的 Maven Wrapper，因此不依赖系统 Maven 版本。先用 MySQL 客户端执行 `db/schema.sql`，该脚本创建 `library_manager` 数据库与三张表。设置环境变量 `LIBRARY_DB_USERNAME`、`LIBRARY_DB_PASSWORD`，必要时设置 `LIBRARY_DB_URL`。不要把密码提交到 Git。
 
 启动后端：
 
