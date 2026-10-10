@@ -3,7 +3,7 @@ set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
-for command in npm java sudo nginx; do
+for command in npm java sudo nginx service; do
   if ! command -v "$command" >/dev/null 2>&1; then
     printf 'Missing command: %s\n' "$command" >&2
     exit 1
@@ -35,11 +35,13 @@ sudo install -d -o libraryapp -g libraryapp /opt/library-management
 sudo install -d /var/www/library-management
 sudo cp -a "$repo_root/frontend/dist/." /var/www/library-management/
 sudo install -o libraryapp -g libraryapp -m 644 "$repo_root/backend/target/library-management-system-0.0.1-SNAPSHOT.jar" /opt/library-management/library-api.jar
-sudo install -m 644 "$repo_root/deploy/systemd/library-api.service" /etc/systemd/system/library-api.service
+sudo chown libraryapp:libraryapp /etc/library-management/api.env
+sudo chmod 600 /etc/library-management/api.env
 sudo install -m 644 "$repo_root/deploy/nginx/library.conf" /etc/nginx/sites-available/library-management
 sudo ln -sfn /etc/nginx/sites-available/library-management /etc/nginx/sites-enabled/library-management
 sudo nginx -t
-sudo systemctl daemon-reload
-sudo systemctl enable --now library-api
-sudo systemctl reload nginx
-printf 'Deployment files installed. Check systemctl status library-api and visit the host address.\n'
+sudo service mysql start
+sudo service nginx start
+sudo -u libraryapp bash "$repo_root/deploy/scripts/restart-api.sh"
+sudo service nginx reload
+printf 'Deployment complete. Check /opt/library-management/library-api.log and visit the host address.\n'
