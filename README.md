@@ -41,7 +41,7 @@ npm run dev
 
 ## 验证与演示
 
-后端测试：在 `backend/` 运行 `./mvnw.cmd test`（Ubuntu 中为 `./mvnw test`）。前端测试与构建：在 `frontend/` 运行 `npm test` 和 `npm run build`。
+后端测试：在 `backend/` 运行 `./mvnw.cmd test`（Ubuntu 中为 `bash ./mvnw test`）。前端测试与构建：在 `frontend/` 运行 `npm test` 和 `npm run build`。
 
 演示建议按“添加图书 → 登记读者 → 借出 → 查看库存减少与借阅记录 → 归还 → 查看库存恢复”进行。库存为零时借出会被拒绝，同一借阅记录不能重复归还。
 

@@ -10,10 +10,14 @@ for command in npm java sudo nginx service; do
   fi
 done
 
-if [[ ! -f /etc/library-management/api.env ]]; then
+if ! sudo test -f /etc/library-management/api.env; then
   printf 'Create /etc/library-management/api.env from deploy/api.env.example first.\n' >&2
   exit 1
 fi
+
+set -a
+source <(sudo cat /etc/library-management/api.env)
+set +a
 
 if [[ -e /etc/nginx/sites-enabled/default ]]; then
   printf 'The default Nginx site owns port 80. Review and disable it before deployment.\n' >&2
@@ -25,7 +29,7 @@ npm ci
 npm run build
 
 cd "$repo_root/backend"
-./mvnw -B package
+bash ./mvnw -B package
 
 if ! id libraryapp >/dev/null 2>&1; then
   sudo useradd --system --home /opt/library-management --shell /usr/sbin/nologin libraryapp
