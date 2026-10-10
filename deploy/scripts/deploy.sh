@@ -25,7 +25,7 @@ npm ci
 npm run build
 
 cd "$repo_root/backend"
-./mvnw -B package
+bash ./mvnw -B package
 
 if ! id libraryapp >/dev/null 2>&1; then
   sudo useradd --system --home /opt/library-management --shell /usr/sbin/nologin libraryapp
