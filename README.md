@@ -8,7 +8,7 @@
 frontend/   React + TypeScript + Vite
 backend/    Java 17 + Spring Boot 3.2 + MyBatis
 db/         MySQL 初始化脚本
-deploy/     WSL Ubuntu 所需的 Nginx、systemd 和部署脚本
+deploy/     WSL1 Ubuntu 所需的 Nginx 和部署脚本
 docs/       API 与部署说明
 ```
 
