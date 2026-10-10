@@ -29,7 +29,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON library_manager.* TO 'pyl'@'localhost';
 
 ```bash
 sudo useradd --system --home /opt/library-management --shell /usr/sbin/nologin libraryapp 2>/dev/null || true
-sudo install -d -m 700 /etc/library-management
+sudo install -d -o libraryapp -g libraryapp -m 700 /etc/library-management
 sudo cp deploy/api.env.example /etc/library-management/api.env
 sudo chown libraryapp:libraryapp /etc/library-management/api.env
 sudo chmod 600 /etc/library-management/api.env

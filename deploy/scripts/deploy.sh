@@ -10,7 +10,7 @@ for command in npm java sudo nginx service; do
   fi
 done
 
-if [[ ! -f /etc/library-management/api.env ]]; then
+if ! sudo test -f /etc/library-management/api.env; then
   printf 'Create /etc/library-management/api.env from deploy/api.env.example first.\n' >&2
   exit 1
 fi
