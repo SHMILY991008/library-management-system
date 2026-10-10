@@ -15,6 +15,10 @@ if ! sudo test -f /etc/library-management/api.env; then
   exit 1
 fi
 
+set -a
+source <(sudo cat /etc/library-management/api.env)
+set +a
+
 if [[ -e /etc/nginx/sites-enabled/default ]]; then
   printf 'The default Nginx site owns port 80. Review and disable it before deployment.\n' >&2
   exit 1

@@ -38,6 +38,14 @@ sudo nano /etc/library-management/api.env
 
 在文件中填入实际数据库账号与密码。不要将真实密码提交到 Git。
 
+`LIBRARY_DB_URL` 的值中含有 `&`，必须用双引号包住，例如：
+
+```ini
+LIBRARY_DB_URL="jdbc:mysql://127.0.0.1:3306/library_manager?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8"
+LIBRARY_DB_USERNAME=pyl
+LIBRARY_DB_PASSWORD=你的数据库密码
+```
+
 ## 3. 安装应用
 
 确认 Java 17、Node.js 16.20.2、MySQL 5.7、Nginx 已安装。首次执行 Maven Wrapper 时，它会下载项目指定的 Maven 版本。检查 `/etc/nginx/sites-enabled/default`：如果它仍占用 80 端口，先确认没有其他网站依赖，再手动禁用。部署脚本会在默认站点仍启用时停止，避免覆盖已有网站。
