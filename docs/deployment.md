@@ -19,11 +19,11 @@ sudo mysql < db/schema.sql
 上面的 SQL 会创建 `library_manager` 数据库及三张表。然后在 MySQL 中为应用创建一个仅用于该数据库的账号，例如：
 
 ```sql
-CREATE USER 'ply'@'localhost' IDENTIFIED BY '请换成随机密码';
-GRANT SELECT, INSERT, UPDATE, DELETE ON library_manager.* TO 'ply'@'localhost';
+CREATE USER 'pyl'@'localhost' IDENTIFIED BY '请换成随机密码';
+GRANT SELECT, INSERT, UPDATE, DELETE ON library_manager.* TO 'pyl'@'localhost';
 ```
 
-如果连接地址使用 `127.0.0.1`，MySQL 可能按 TCP 主机匹配；请根据本机 MySQL 用户配置创建相应的 `'ply'@'127.0.0.1'` 授权，或把数据库 URL 改为 `localhost`。可用 `mysql -u ply -p library_manager` 先验证连接。
+如果连接地址使用 `127.0.0.1`，MySQL 可能按 TCP 主机匹配；请根据本机 MySQL 用户配置创建相应的 `'pyl'@'127.0.0.1'` 授权，或把数据库 URL 改为 `localhost`。可用 `mysql -u pyl -p library_manager` 先验证连接。
 
 创建运行环境文件，并限制访问权限：
 
