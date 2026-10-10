@@ -93,6 +93,10 @@ Content-Type: application/json
 
 ## 读者
 
+### 查询读者列表
+
+`GET /api/readers`：返回未删除的全部读者，按 ID 从新到旧排序。
+
 ### 新增读者
 
 `POST /api/readers`
@@ -125,6 +129,10 @@ Content-Type: application/json
 成功：`200 OK`
 
 ## 借阅
+
+### 查询最近借阅记录
+
+`GET /api/borrow-records`：返回最近 100 条借阅记录，按借出时间从新到旧排序。
 
 ### 借书
 

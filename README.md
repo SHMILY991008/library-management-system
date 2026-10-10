@@ -1,79 +1,53 @@
-# 图书管理系统
+# 图书管理系统 · 馆藏工作台
 
-一个用于学习 Java 后端开发的 Spring Boot REST API 项目。系统目前支持图书管理、读者管理、借书、还书、借阅记录查询，以及借书时的原子库存扣减。
-
-## 功能
-
-- 图书：新增、按 ID 查询、修改、逻辑删除、按标题分页查询。
-- 读者：新增、按 ID 查询、读者编号唯一校验。
-- 借阅：借书、还书、按读者查询借阅记录。
-- 规则：ISBN 唯一、读者编号唯一、库存不能为负、可借库存不能超过总库存、同一记录不能重复归还。
-- 并发保护：借书通过数据库原子 SQL 扣减库存，避免多请求同时借最后一本书时超借。
-
-## 技术栈
-
-- Java 21
-- Spring Boot 4.1.0
-- Maven
-- MySQL 8
-- MyBatis
-- JUnit 5、Mockito、Spring MockMvc
-
-## 环境要求
-
-- 已安装 JDK 21、Maven、MySQL。
-- MySQL 中存在 `library_manager` 数据库，并且应用配置的账号具有读写权限。
-- 环境变量 `LIBRARY_DB_PASSWORD` 保存 MySQL 密码；不要把密码写入 Git 或 `application.properties`。
-
-## 启动
-
-在项目根目录的 PowerShell 中执行：
-
-```powershell
-$env:LIBRARY_DB_PASSWORD="你的MySQL密码"
-mvn "-Dmaven.repo.local=D:\codex project\library manager system\.m2\repository" spring-boot:run
-```
-
-默认地址为 `http://localhost:8080`。
-
-## 测试
-
-```powershell
-mvn "-Dmaven.repo.local=D:\codex project\library manager system\.m2\repository" test
-```
-
-当前完整测试集包含 Controller 测试、Service 单元测试和 MySQL Mapper 集成测试。
-
-## 接口文档
-
-详见 [docs/API.md](docs/API.md)。
+一个供练习和演示的前后端分离项目。React 页面可管理图书、登记读者和办理借还；Java Spring Boot 后端使用 MyBatis 访问 MySQL。借书时由数据库原子扣减库存，借还操作由事务保护。
 
 ## 项目结构
 
 ```text
-src/main/java/com/pp/library
-├── book/       图书模块
-├── reader/     读者模块
-├── borrow/     借阅模块
-└── health/     健康检查模块
-
-src/main/resources/mapper
-├── BookMapper.xml
-├── ReaderMapper.xml
-└── BorrowRecordMapper.xml
+frontend/   React + TypeScript + Vite
+backend/    Java 17 + Spring Boot 3.2 + MyBatis
+db/         MySQL 初始化脚本
+deploy/     WSL Ubuntu 所需的 Nginx、systemd 和部署脚本
+docs/       API 与部署说明
 ```
 
-每个业务模块按职责分为：
+## 本地运行
 
-- `controller`：HTTP 路由、参数绑定和状态码。
-- `dto`：接收请求数据。
-- `entity`：映射数据库表。
-- `mapper`：定义数据库访问方法及 SQL。
-- `service`：业务规则与事务。
-- `vo`：返回给客户端的数据。
+本机使用 Java 17、Node.js 16.20.2 和现有的 MySQL 8；云电脑使用 Java 17、Node.js 16.20.2、MySQL 5.7 和 Nginx 1.14。建表脚本和数据库访问代码兼容 MySQL 5.7、8.0。后端使用项目自带的 Maven Wrapper，因此不依赖系统 Maven 版本。先用 MySQL 客户端执行 `db/schema.sql`，该脚本创建 `library_manager` 数据库与三张表。设置环境变量 `LIBRARY_DB_USERNAME`、`LIBRARY_DB_PASSWORD`，必要时设置 `LIBRARY_DB_URL`。不要把密码提交到 Git。
 
-## 数据库初始化说明
+启动后端：
 
-项目中保留了 `db/schema.sql` 作为数据库结构参考。
+```powershell
+cd backend
+# Maven Wrapper 优先使用 JAVA_HOME；确认它也指向 JDK 17。
+$env:JAVA_HOME="C:\Program Files\Eclipse Adoptium\jdk-17.0.20.101-hotspot"
+$env:Path="$env:JAVA_HOME\bin;$env:Path"
+.\mvnw.cmd -v
+$env:LIBRARY_DB_USERNAME="你的数据库用户名"
+$env:LIBRARY_DB_PASSWORD="你的数据库密码"
+.\mvnw.cmd spring-boot:run
+```
 
-> 注意：当前 `db/schema.sql` 的 `borrow_record` 字段名与运行中的 `BorrowRecordMapper.xml` 不一致。运行中的代码使用 `borrowed_at`、`returned_at` 和 `status`；在全新数据库初始化前，应先同步该 SQL 文件与 Mapper。现有开发数据库和自动化测试均已验证通过。
+在另一个终端启动前端：
+
+```powershell
+cd frontend
+npm ci
+npm run dev
+```
+
+打开 Vite 输出的本地地址，通常是 `http://localhost:5173/`。开发服务器会把 `/api` 请求转发到 `http://localhost:8080`。
+
+## 验证与演示
+
+后端测试：在 `backend/` 运行 `./mvnw.cmd test`（Ubuntu 中为 `./mvnw test`）。前端测试与构建：在 `frontend/` 运行 `npm test` 和 `npm run build`。
+
+演示建议按“添加图书 → 登记读者 → 借出 → 查看库存减少与借阅记录 → 归还 → 查看库存恢复”进行。库存为零时借出会被拒绝，同一借阅记录不能重复归还。
+
+## 部署与接口
+
+- [WSL Ubuntu 部署步骤](docs/deployment.md)
+- [后端 API](docs/API.md)
+
+生产环境由 Nginx 提供 React 静态文件，并将 `/api` 转发到 Spring Boot。云电脑的公网地址、Windows 防火墙和 WSL 网络模式要根据实际环境配置。
