@@ -20,6 +20,10 @@ docs/       API 与部署说明
 
 ```powershell
 cd backend
+# Maven Wrapper 优先使用 JAVA_HOME；确认它也指向 JDK 17。
+$env:JAVA_HOME="C:\Program Files\Eclipse Adoptium\jdk-17.0.20.101-hotspot"
+$env:Path="$env:JAVA_HOME\bin;$env:Path"
+.\mvnw.cmd -v
 $env:LIBRARY_DB_USERNAME="你的数据库用户名"
 $env:LIBRARY_DB_PASSWORD="你的数据库密码"
 .\mvnw.cmd spring-boot:run
